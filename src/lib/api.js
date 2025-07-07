@@ -2,7 +2,7 @@ import axios from 'axios';
 import { accessToken } from './stores/store';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api', // ✅ Your Flask base URL
+  baseURL: 'https://green-spoon-backend.onrender.com/api', 
   headers: {
     'Content-Type': 'application/json'
   }
