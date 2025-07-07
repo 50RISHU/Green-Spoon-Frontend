@@ -1,21 +1,21 @@
 <script>
   import { goto } from '$app/navigation';
-
-  export let onSubmit = () => {};
+  import api from '$lib/api';
+	import { toast } from '@zerodevx/svelte-toast';
 
   let title = "";
   let ingredients = "";
   let instructions = "";
-  let imageUrl = "";
+  let imageFile = null;
   let category = "";
-  let time = "";
+  let description = "";
+  let Loading = false;
   let error = "";
   let success = "";
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  async function handleSubmit() {
 
-    if (!title || !ingredients || !instructions || !category || !time) {
+    if (!title || !ingredients || !instructions || !description) {
       error = "⚠️ Please fill in all required fields.";
       success = "";
       return;
@@ -24,25 +24,32 @@
     success = "✅ Recipe added successfully!";
     error = "";
 
-    onSubmit({
-      title,
-      ingredients,
-      instructions,
-      imageUrl,
-      category,
-      time
-    });
+    try{
+      Loading = true;
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("ingredients", ingredients);
+      formData.append("instructions", instructions);
+      formData.append("image", imageFile);
+      formData.append("description", description);
 
-    title = "";
-    ingredients = "";
-    instructions = "";
-    imageUrl = "";
-    category = "";
-    time = "";
+      const res = await api.post("/create_recipe", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
 
-    setTimeout(() => {
-      goto("/dashboard");
-    }, 1500);
+      console.log("Recipe added successfully:", res.data);
+
+      toast.push("recipe added successfully.")
+      goto('/dashboard')
+    } catch (error) {
+      console.error("Error adding recipe:", error);
+      error = "⚠️ Failed to add recipe.";
+      success = "";
+    } finally {
+      Loading = false;
+    }
   }
 </script>
 
@@ -51,7 +58,7 @@
 </h2>
 
 <!-- Enhanced Example for AddRecipeForm.svelte -->
-<form class="w-100 w-md-75 mx-auto p-4 bg-white rounded shadow-lg animate__animated animate__fadeInUp" on:submit|preventDefault={handleSubmit}>
+<form class="w-100 w-md-75 mx-auto p-4 bg-white rounded shadow-lg animate__animated animate__fadeInUp" on:submit|preventDefault={handleSubmit} enctype="multipart/form-data">
   <!-- Alerts -->
   {#if error}
     <div class="alert alert-danger animate__animated animate__shakeX">{error}</div>
@@ -72,6 +79,11 @@
     <textarea class="form-control shadow-sm" rows="3" placeholder="List ingredients separated by commas" bind:value={ingredients}></textarea>
   </div>
 
+  <div class="mb-3">
+    <label class="form-label fw-bold">Description</label>
+    <textarea class="form-control shadow-sm" rows="3" placeholder="Enter recipe description" bind:value={description}></textarea>
+  </div>
+
   <!-- Instructions -->
   <div class="mb-3">
     <label class="form-label fw-bold">Instructions</label>
@@ -80,46 +92,16 @@
 
   <!-- Image URL -->
   <div class="mb-3">
-    <label class="form-label fw-bold">Image URL (optional)</label>
-    <input type="url" class="form-control shadow-sm" placeholder="https://example.com/image.jpg" bind:value={imageUrl} />
-  </div>
-
-  <!-- Category -->
-  <div class="mb-3">
-    <label class="form-label fw-bold">Category</label>
-    <select class="form-select shadow-sm" bind:value={category}>
-      <option value="" disabled selected>-- Select Category --</option>
-      <option>Breakfast</option>
-      <option>Lunch</option>
-      <option>Dinner</option>
-      <option>Snacks</option>
-      <option>Dessert</option>
-      <option>Drinks</option>
-    </select>
-  </div>
-
-  <!-- Time -->
-  <div class="mb-4">
-    <label class="form-label fw-bold">⏱ Required Time</label>
-    <input type="text" class="form-control shadow-sm" placeholder="e.g. 15 mins, 1 hour" bind:value={time} />
+    <label class="form-label fw-bold">Image (Optional)</label>
+    <input type="file" class="form-control shadow-sm" accept="image/*" on:change={(e) => (imageFile = e.target.files[0])}>
   </div>
 
   <!-- Submit Button -->
-  <button type="submit" class="btn btn-success w-100 shadow">📤 Submit Recipe</button>
+  <button type="submit" class="btn btn-success w-100 shadow" disabled={Loading}>
+    {Loading ? "⏳ Adding Recipe..." : "📤 Submit Recipe"}
+  </button>
 </form>
 
-<!-- General Enhancement Notes: -->
-<!-- 
-1. Wrapped every form in a responsive container (`w-100 w-md-75 mx-auto`) and added padding, shadow, and rounded corners.
-2. Used `fw-bold` for labels for better readability.
-3. Used `shadow-sm` on form-controls to give subtle depth.
-4. Added `mb-*` and `mt-*` Bootstrap utilities for spacing.
-5. Preserved animations with animate.css.
-6. These patterns should be applied to all other components similarly (e.g. cards in Savarecipe.svelte, profile avatar in Profile.svelte, etc.).
-7. All existing color themes (green/white) are untouched.
--->
-
-<!-- Add this to the global style if not already included -->
 <style>
   @import "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css";
   :global(body) {

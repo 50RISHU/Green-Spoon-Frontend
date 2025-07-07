@@ -9,7 +9,7 @@
 />
 
 <!-- Hero Section -->
-<section class="hero-section d-flex flex-column justify-content-center align-items-center text-center text-dark px-3">
+<section class="hero-section d-flex flex-column justify-content-center align-items-center text-center text-dark px-3 z-0">
   <div class="container py-5">
     <h1 class="display-3 fw-bold text-success mb-3 animate__animated animate__fadeInDown ">
       🦬 Eat Green, Live Clean!

@@ -5,11 +5,19 @@
   import { onMount } from "svelte";
 
   let user = null;
+  let profile = '';
 
 	onMount(async () => {
 		try {
 			const res = await api.get('/profile');
 			user = res.data;
+      if(user.user.profile_picture_url){
+        profile = user.user.profile_picture_url;
+        console.log(profile)
+      } else {
+        profile = user.user.name;
+        profile = `https://api.dicebear.com/7.x/initials/svg?seed=${profile}`;
+      }
       console.log('User profile fetched successfully:', user);
 		} catch (err) {
 			console.error('Failed to fetch profile:', err);
@@ -26,11 +34,11 @@
 
 {#if user}
 	<div
-  class="card mx-auto shadow-sm profile-card animate__animated animate__zoomIn"
+  class="card mx-auto shadow-sm profile-card animate__animated animate__zoomIn mt-5"
 >
   <div class="card-body text-center">
     <img
-      src={user.user.profile_picture_url}
+      src={profile}
       alt="Profile"
       class="rounded-circle mb-3"
       style="width: 100px; height: 100px;"
@@ -68,7 +76,7 @@
 </div>
 
 {:else}
-	<div class="text-center">
+	<div class="text-center d-flex justify-content-center align-items-center mt-5">
   <div class="spinner-border" role="status">
     <span class="visually-hidden">Loading...</span>
   </div>

@@ -2,7 +2,7 @@
   export let icon = "📦";
   export let title = "Card Title";
   export let description = "Card description goes here.";
-  export let actions = []; // [{ text: 'Button Text', href: '/link', variant: 'primary' }]
+  export let actions = []; 
 </script>
 
 <div class="glass p-4 h-100 shadow animate__animated animate__fadeInUp">

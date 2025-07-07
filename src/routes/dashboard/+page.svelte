@@ -1,5 +1,14 @@
 <script>
   import DashboardCard from '$lib/components/DashboardCard.svelte';
+  import { accessToken } from '$lib/stores/store';
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+		if (!$accessToken || $accessToken.trim() === '') {
+			goto('/login'); // Not logged in
+		}
+	});
 </script>
 
 <section class="dashboard-bg min-vh-100 py-5">

@@ -17,6 +17,7 @@
 		"@sveltejs/adapter-node": "^5.2.12",
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
+		"@zerodevx/svelte-toast": "^0.9.6",
 		"eslint": "^9.18.0",
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-svelte": "^3.0.0",
@@ -28,8 +29,12 @@
 		"vite-plugin-devtools-json": "^0.2.0"
 	},
 	"dependencies": {
+		"@langchain/google-genai": "^0.2.14",
 		"animate.css": "^4.1.1",
 		"axios": "^1.10.0",
-		"bootstrap": "^5.3.7"
+		"bootstrap": "^5.3.7",
+		"html2pdf.js": "^0.10.3",
+		"marked": "^16.0.0",
+		"svelte-toast": "^1.0.0"
 	}
 }

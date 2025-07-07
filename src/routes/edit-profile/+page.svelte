@@ -1,9 +1,18 @@
 <script>
   import EditProfileCard from "$lib/components/EditProfileCard.svelte";
+  import { accessToken } from '$lib/stores/store';
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
+
+  onMount(() => {
+		if (!$accessToken || $accessToken.trim() === '') {
+			goto('/login'); // Not logged in
+		}
+	});
 </script>
 
 <div
-  class="d-flex justify-content-center align-items-center min-vh-100"
+  class="container py-4"
   style="background-color: #d1ffbd;"
 >
   <EditProfileCard />

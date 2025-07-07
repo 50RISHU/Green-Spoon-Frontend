@@ -2,4 +2,4 @@
   import RecipeCard from '$lib/components/RecipeCard.svelte';
 </script>
 
-<RecipeCard />
+<RecipeCard fetchUrl="/get_all_recipe" showSave={true} />
