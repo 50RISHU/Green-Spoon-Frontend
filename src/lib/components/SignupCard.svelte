@@ -31,14 +31,14 @@
 					password: password
 				});
 
-				console.log(response.data);
-				success = '✅ Registration successful!';
+				// console.log(response.data);
+				success = 'Registration successful!';
 				error = '';
-				toast.push("Sign Up Successfull.")
+				toast.push(response.data.message)
 
 				goto('/login');
 			} catch (err) {
-				error = err.response?.data?.error || '❌ Registration failed. Please try again.';
+				error = err.response?.data?.error || 'Registration failed. Please try again.';
 				success = '';
 				console.error(err);
 			} finally {

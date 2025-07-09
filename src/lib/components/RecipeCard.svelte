@@ -1,10 +1,13 @@
 <script>
+	import { goto } from '$app/navigation';
 	import api from '$lib/api';
+	import { toast } from '@zerodevx/svelte-toast';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
 	export let fetchUrl = '/get_all_recipe';
 	export let showSave = true;
+	export let isMyRecipe = false;
 	let selectedPost = null;
 	let showCommentsModal = false;
 	let newCommentText = '';
@@ -54,6 +57,24 @@
 		}
 	}
 
+	async function confirmDelete(recipeId) {
+		const confirmed = confirm("🗑️ Are you sure you want to delete this recipe?");
+		if (confirmed) {
+			await deleteRecipe(recipeId);
+		}
+	}
+
+	async function deleteRecipe(id) {
+		try {
+			const res = await api.post('/delete_recipe', { recipe_id: id });
+			console.log(res.data);
+			toast.push(res.data.message);
+			goto('/dashboard');
+		} catch (error) {
+			console.error('Error deleting recipe:', error);
+		}
+	}
+
 	onMount(async () => {
 		try {
 			Loading = true;
@@ -82,7 +103,7 @@
 				<div class="col animate__animated animate__zoomIn" style="animation-delay: {i * 0.1}s">
 					<div class="card h-100 shadow rounded-4 overflow-hidden">
 						<img
-							src={post.recipe_image_url || 'https://via.placeholder.com/300x200?text=No+Image'}
+							src={post.recipe_image_url || 'https://placehold.co/800x400/8bc34a/ffffff?text=No+Recipe+Image'}
 							alt={post.title}
 							class="card-img-top recipe-image"
 						/>
@@ -106,6 +127,14 @@
 								<a class="btn btn-sm btn-outline-success" href={`/preview_recipe/${post.id}`}>
 									🔍 Preview
 								</a>
+								{#if isMyRecipe}
+									<a class="btn btn-sm btn-outline-secondary" href={`/edit-Recipe/${post.id}`}>
+										Edit</a
+									>
+									<button class="btn btn-sm btn-outline-danger" on:click={() => confirmDelete(post.id)}>
+										Delete</button
+									>
+								{/if}
 							</div>
 						</div>
 					</div>

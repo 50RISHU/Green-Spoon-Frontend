@@ -25,17 +25,19 @@
 					password: password
 				});
 
-				console.log(response.data);
-				success = '✅ Login successful!';
+				// console.log(response.data);
+				success = 'Login successful!';
 				error = '';
-				toast.push('login successfull.');
+				toast.push(response.data.message);
+
 				accessToken.set(response.data.access_token);
 				goto('/dashboard');
+				
 			} catch (err) {
-				error = err.response?.data?.error || '❌ Login failed. Please try again.';
+				error = 'Login failed. Please try again. Check your credentials or Network connection.';
 				success = '';
 				console.error(err);
-				toast.push('login failed.');
+				toast.push('Login failed. Please try again.');
 			} finally {
 				loading = false;
 			}

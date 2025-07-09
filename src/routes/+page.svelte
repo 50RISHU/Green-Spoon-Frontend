@@ -12,7 +12,7 @@
 <section class="hero-section d-flex flex-column justify-content-center align-items-center text-center text-dark px-3 z-0">
   <div class="container py-5">
     <h1 class="display-3 fw-bold text-success mb-3 animate__animated animate__fadeInDown ">
-      🦬 Eat Green, Live Clean!
+      ☘️ Eat Green, Live Clean!
     </h1>
     <p class="lead text-dark mb-4 fs-5 animate__animated animate__fadeIn ">
       Discover delightful vegetarian recipes crafted with care & powered by community and AI. 

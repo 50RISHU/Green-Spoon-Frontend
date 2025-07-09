@@ -2,7 +2,10 @@
 	import { goto } from '$app/navigation';
 	import api from '$lib/api';
 	import { toast } from '@zerodevx/svelte-toast';
+	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 
+	$: recipeId = $page.params.id;
 	let title = '';
 	let ingredients = '';
 	let instructions = '';
@@ -11,6 +14,26 @@
 	let Loading = false;
 	let error = '';
 	let success = '';
+	let recipe = '';
+
+	onMount(async () => {
+		try {
+			Loading = true;
+			const res = await api.get(`/get_recipe/${recipeId}`);
+			recipe = res.data.recipe[0];
+            title = recipe.title;
+			console.log(title)
+            ingredients = recipe.ingredients;
+            instructions = recipe.instructions;
+            description = recipe.description;
+            console.log(recipe)
+		} catch (err) {
+			error = '⚠️ Failed to load recipe.';
+			console.error(err.data);
+		} finally {
+			Loading = false;
+		}
+	});
 
 	async function handleSubmit() {
 		if (!title || !ingredients || !instructions || !description) {
@@ -19,26 +42,29 @@
 			return;
 		}
 
+		success = 'Recipe added successfully!';
+		error = '';
+
 		try {
 			Loading = true;
 			const formData = new FormData();
+			formData.append('recipe_id', recipeId);
 			formData.append('title', title);
 			formData.append('ingredients', ingredients);
 			formData.append('instructions', instructions);
 			formData.append('image', imageFile);
 			formData.append('description', description);
 
-			const res = await api.post('/create_recipe', formData, {
+			const res = await api.put('/update_recipe', formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data'
 				}
 			});
 
-			success = 'Recipe added successfully!';
-			error = '';
 			// console.log("Recipe added successfully:", res.data);
 
 			toast.push(res.data.message);
+			console.log(res.data);
 			goto('/dashboard');
 		} catch (error) {
 			console.error('Error adding recipe:', error);
@@ -48,11 +74,13 @@
 			Loading = false;
 		}
 	}
+
+	
 </script>
 
 <div class="container mt-5">
 	<h2 class="text-success text-center mb-4 animate__animated animate__fadeInDown">
-		➕ Add New Recipe
+		Update Recipe
 	</h2>
 
 	<!-- Enhanced Example for AddRecipeForm.svelte -->

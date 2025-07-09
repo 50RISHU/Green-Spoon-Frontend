@@ -2,10 +2,14 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import api from '$lib/api';
+    import { marked } from 'marked';
 
 	let recipe = null;
 	let Loading = true;
 	let error = '';
+    let markedRecipeDescription = '';
+    let markedRecipeIngredients = '';
+    let markedRecipeInstructions = '';
 
 	$: recipeId = $page.params.id;
 
@@ -14,6 +18,9 @@
 			Loading = true;
 			const res = await api.get(`/get_recipe/${recipeId}`);
 			recipe = res.data.recipe[0];
+            markedRecipeDescription = marked.parse(recipe.description);
+            markedRecipeIngredients = marked.parse(recipe.ingredients);
+            markedRecipeInstructions = marked.parse(recipe.instructions);
             console.log(recipe)
 		} catch (err) {
 			error = '⚠️ Failed to load recipe.';
@@ -67,17 +74,17 @@
 
                     <div class="section-content animate__animated animate__slideInUp">
                         <h5 class="section-heading"><i class="fas fa-info-circle me-2"></i> Description:</h5>
-                        <p class="text-secondary">{recipe.description}</p>
+                        <p class="text-secondary">{@html markedRecipeDescription}</p>
                     </div>
 
                     <div class="section-content animate__animated animate__slideInUp animate__delay-1s">
                         <h5 class="section-heading"><i class="fas fa-carrot me-2"></i> Ingredients:</h5>
-                        <p class="text-secondary">{recipe.ingredients}</p>
+                        <p class="text-secondary">{@html markedRecipeIngredients}</p>
                     </div>
 
                     <div class="section-content animate__animated animate__slideInUp animate__delay-2s">
                         <h5 class="section-heading"><i class="fas fa-clipboard-list me-2"></i> Instructions:</h5>
-                        <p class="text-secondary">{recipe.instructions}</p>
+                        <p class="text-secondary">{@html markedRecipeInstructions}</p>
                     </div>
 
                 </div>

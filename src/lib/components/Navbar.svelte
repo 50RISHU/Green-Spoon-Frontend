@@ -4,22 +4,18 @@
 	import { goto } from '$app/navigation';
 	import { get } from 'svelte/store';
 	import api from '$lib/api';
-	import logo from '$lib/green spoon.webp';
+	import logo from '$lib/img/green_spoon.webp';
 
-	// Use regular variables, not reactive statements
 	let isLoggedIn = false;
 	let isTokenChecked = false;
 	let profile = '';
 
-	// Subscribe to token changes to update navbar reactively
 	accessToken.subscribe((token) => {
 		if (isTokenChecked) {
-			// Only react to token changes after initial check
 			if (!token) {
 				isLoggedIn = false;
 				profile = '';
 			} else {
-				// Re-validate token when it changes
 				validateToken(token);
 			}
 		}
@@ -40,6 +36,7 @@
 			}
 		} catch (e) {
 			console.error('Token validation error:', e);
+			// handleInvalidToken();
 			if (e.response && (e.response.status === 401 || e.response.status === 403)) {
 				handleInvalidToken();
 			} else {
@@ -49,8 +46,8 @@
 	}
 
 	onMount(async () => {
-		const token = get(accessToken);
-		
+		const token = accessToken;
+
 		if (!token) {
 			isLoggedIn = false;
 			isTokenChecked = true;
@@ -74,9 +71,11 @@
 </script>
 
 {#if isTokenChecked}
-	<nav class="navbar navbar-expand-lg shadow-sm px-4 custom-navbar position-fixed top-0 start-0 w-100 z-1">
+	<nav
+		class="navbar navbar-expand-lg shadow-sm px-4 custom-navbar position-fixed top-0 start-0 w-100 z-1"
+	>
 		<a class="navbar-brand fw-bold text-white" href="/">
-			<img src={logo} alt="Bootstrap" width="35" />
+			<img src={logo} alt="img" width="35" />
 			<span>The Green Spoon</span>
 		</a>
 		<button
@@ -103,13 +102,27 @@
 						<a class="nav-link text-white" href="/recipes">Recipes</a>
 					</li>
 					<li class="nav-item">
+						<a class="nav-link text-white" href="/aboutUs">About Us</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-white" href="/contactUs">Contact Us</a>
+					</li>
+					<li class="nav-item">
 						<a class="nav-link text-white" href="/profile">
-							<img src={profile} alt="Profile" class="rounded-circle" style="width: 30px; height: 30px;" />
+							<img
+								src={profile}
+								alt="Profile"
+								class="rounded-circle"
+								style="width: 30px; height: 30px;"
+							/>
 						</a>
 					</li>
 				{:else}
 					<li class="nav-item">
 						<a class="nav-link text-white" href="/recipes">Recipes</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-white" href="/aboutUs">About Us</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link text-white" href="/login">Login</a>

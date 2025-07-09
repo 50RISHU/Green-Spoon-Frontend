@@ -27,8 +27,12 @@
 		if (password) {
 			formData.append('new_password', password);
 		}
-		if (profile_pic) {
+		if (profile_pic && profile_pic.type.startsWith("image/")) {
 			formData.append('profile_pic', profile_pic);
+		} else {
+			error = 'Invalid profile picture format. Please upload an image file.';
+			profile_pic = null;
+			return;
 		}
 
 		try {
@@ -39,12 +43,13 @@
 				}
 			});
 
-			console.log('Profile updated successfully:', res.data);
-			
-			toast.push("file updated successfully.")
+			// console.log('Profile updated successfully:', res.data);
+
+			toast.push(res.data.message)
 			goto('/profile');
 		} catch (error) {
 			console.error('Error updating profile:', error);
+			error = "Failed to update profile.";
 		} finally {
 			Loading = false;
 		}

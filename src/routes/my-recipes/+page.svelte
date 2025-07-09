@@ -1,6 +1,6 @@
 <script>
-  import RecipeCard from '$lib/components/RecipeCard.svelte';
-  import { accessToken } from '$lib/stores/store';
+	import RecipeCard from '$lib/components/RecipeCard.svelte';
+	import { accessToken } from '$lib/stores/store';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 
@@ -11,4 +11,4 @@
 	});
 </script>
 
-<RecipeCard fetchUrl="/get_my_recipe" showSave={false} />
+<RecipeCard fetchUrl="/get_my_recipe" showSave={false} isMyRecipe={true} />

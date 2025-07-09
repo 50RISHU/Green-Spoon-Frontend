@@ -1,7 +1,7 @@
 <script>
 	import Navbar from '$lib/components/Navbar.svelte';
 	import 'bootstrap/dist/css/bootstrap.min.css';
-  import { SvelteToast } from '@zerodevx/svelte-toast'
+	import { SvelteToast } from '@zerodevx/svelte-toast';
 	import { onMount } from 'svelte';
 
 	onMount(async () => {
@@ -12,7 +12,7 @@
 <Navbar />
 
 <div class="d-flex flex-column min-vh-100">
-  <SvelteToast  />
+	<SvelteToast />
 	<main class="flex-grow-1 my-4">
 		<slot />
 	</main>

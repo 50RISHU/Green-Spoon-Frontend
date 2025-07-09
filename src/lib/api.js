@@ -3,6 +3,7 @@ import { accessToken } from './stores/store';
 
 const api = axios.create({
   baseURL: 'https://green-spoon-backend.onrender.com/api', 
+  // baseURL: 'http://127.0.0.1:5000/api', 
   headers: {
     'Content-Type': 'application/json'
   }
