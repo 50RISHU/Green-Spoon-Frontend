@@ -3,11 +3,14 @@
 	import { accessToken } from '$lib/stores/store';
 	import { goto } from '$app/navigation';
 	import { get } from 'svelte/store';
+	import { page } from '$app/stores';
 	import api from '$lib/api';
 	import logo from '$lib/img/green_spoon.webp';
+	import { toast } from '@zerodevx/svelte-toast';
 
 	let isLoggedIn = false;
 	let isTokenChecked = false;
+	let isAdmin = false;
 	let profile = '';
 
 	accessToken.subscribe((token) => {
@@ -29,6 +32,7 @@
 				}
 			});
 			isLoggedIn = res.data.valid === true;
+			isAdmin = res.data.user.is_admin === true;
 			if (isLoggedIn) {
 				profile = res.data.user.profile
 					? res.data.user.profile
@@ -51,6 +55,7 @@
 		if (!token) {
 			isLoggedIn = false;
 			isTokenChecked = true;
+			isAdmin = false;
 			return;
 		}
 
@@ -66,7 +71,10 @@
 		isLoggedIn = false;
 		profile = '';
 		isTokenChecked = true;
-		goto('/login');
+		isAdmin = false;
+		if (!$page.url.pathname.startsWith('/reset-password')) {
+			goto('/');
+		}
 	}
 </script>
 
@@ -92,6 +100,13 @@
 		<div class="collapse navbar-collapse" id="navbarNav">
 			<ul class="navbar-nav ms-auto align-items-center">
 				{#if isLoggedIn}
+					{#if isAdmin}
+						<li class="nav-item">
+							<a class="nav-link text-white" href="/admin_dashboard">Admin</a>
+						</li>
+					{:else}
+						<div class="d-none">{goto('/dashboard')}</div>
+					{/if}
 					<li class="nav-item">
 						<a class="nav-link text-white" href="/dashboard">Dashboard</a>
 					</li>

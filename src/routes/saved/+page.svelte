@@ -11,4 +11,4 @@
 	});
 </script>
 
-<RecipeCard fetchUrl="/get_save_recipe" showSave={false} />
+<RecipeCard fetchUrl="/get_save_recipe" showSave={false} unSave={true} isReport={true} searchRecipe={false}/>

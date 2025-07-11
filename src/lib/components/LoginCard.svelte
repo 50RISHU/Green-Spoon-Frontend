@@ -25,13 +25,18 @@
 					password: password
 				});
 
-				// console.log(response.data);
+				console.log(response.data);
 				success = 'Login successful!';
 				error = '';
 				toast.push(response.data.message);
 
 				accessToken.set(response.data.access_token);
-				goto('/dashboard');
+
+				if(response.data.is_admin === true){
+					goto('/admin_dashboard');
+				} else {
+					goto('/dashboard');
+				}
 				
 			} catch (err) {
 				error = 'Login failed. Please try again. Check your credentials or Network connection.';
@@ -78,6 +83,7 @@
 		</button>
 
 		<div class="text-center mt-3">
+			<a href="/forgot-password" class="text-decoration-none text-success fw-bold">Forgot Password?</a><br>
 			<span>Don't have an account?</span>
 			<a href="/signup" class="text-decoration-none text-success fw-bold">Sign Up</a>
 		</div>

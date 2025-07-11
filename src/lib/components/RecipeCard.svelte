@@ -7,19 +7,37 @@
 
 	export let fetchUrl = '/get_all_recipe';
 	export let showSave = true;
+	export let unSave = false;
 	export let isMyRecipe = false;
+	export let isReport = false;
+	export let searchRecipe = false;
 	let selectedPost = null;
 	let showCommentsModal = false;
 	let newCommentText = '';
 	let Loading = false;
 	let recipes = [];
+	let query = '';
 
 	async function toggleSave(post) {
 		try {
 			const res = await api.post('/save_recipe', { recipe_id: post.id });
 			console.log(res.data);
+			toast.push(res.data.message);
 		} catch (error) {
 			console.error('Error save:', error);
+			toast.push("Can't Save the recipe.");
+		}
+	}
+
+	async function toggleUnsave(post) {
+		try {
+			const res = await api.post('/unsave_recipe', { recipe_id: post.id });
+			console.log(res.data);
+			toast.push(res.data.message);
+			goto('/dashboard');
+		} catch (error) {
+			console.error('Error unsave:', error);
+			toast.push("Can't Unsave the recipe.");
 		}
 	}
 
@@ -54,11 +72,12 @@
 			console.log('Comment added:', res.data);
 		} catch (error) {
 			console.error('Error adding comment:', error);
+			toast.push("Can't add comment.");
 		}
 	}
 
 	async function confirmDelete(recipeId) {
-		const confirmed = confirm("🗑️ Are you sure you want to delete this recipe?");
+		const confirmed = confirm('🗑️ Are you sure you want to delete this recipe?');
 		if (confirmed) {
 			await deleteRecipe(recipeId);
 		}
@@ -75,6 +94,19 @@
 		}
 	}
 
+	async function searchRecipes() {
+		Loading = true;
+		try {
+			const res = await api.post(`/search_recipe`, { query: query });
+			recipes = res.data.recipes;
+			console.log('Search results:', recipes);
+		} catch (error) {
+			console.error('Error searching recipes:', error);
+		} finally {
+			Loading = false;
+		}
+	}
+
 	onMount(async () => {
 		try {
 			Loading = true;
@@ -88,6 +120,21 @@
 	});
 </script>
 
+{#if searchRecipe}
+	<div class="container mt-5 py-2">
+		<div class="input-group mb-3">
+			<input
+				type="text"
+				class="form-control"
+				placeholder="Search recipes..."
+				bind:value={query}
+				on:keydown={(e) => e.key === 'Enter' && searchRecipes()}
+			/>
+			<button class="btn btn-success z-0" on:click={searchRecipes}>Search</button>
+		</div>
+	</div>
+{/if}
+
 {#if Loading}
 	<div class="text-center py-5">
 		<p class="text-muted fs-4">Loading recipes...</p>
@@ -97,13 +144,14 @@
 		<p class="text-muted fs-4">No recipes found.</p>
 	</div>
 {:else}
-	<section class="container py-5">
+	<section class={`container py-5`}>
 		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4">
 			{#each recipes as post, i}
 				<div class="col animate__animated animate__zoomIn" style="animation-delay: {i * 0.1}s">
 					<div class="card h-100 shadow rounded-4 overflow-hidden">
 						<img
-							src={post.recipe_image_url || 'https://placehold.co/800x400/8bc34a/ffffff?text=No+Recipe+Image'}
+							src={post.recipe_image_url ||
+								'https://placehold.co/800x400/8bc34a/ffffff?text=No+Recipe+Image'}
 							alt={post.title}
 							class="card-img-top recipe-image"
 						/>
@@ -121,17 +169,28 @@
 								{#if showSave}
 									<button class="btn btn-sm" on:click={() => toggleSave(post)}>🔖 Save</button>
 								{/if}
+								{#if unSave}
+									<button class="btn btn-sm" on:click={() => toggleUnsave(post)}>🔖 Unsave</button>
+								{/if}
 								<button class="btn btn-sm btn-outline-primary" on:click={() => openComments(post)}>
 									💬 Comment ({post.comment?.length || 0})
 								</button>
 								<a class="btn btn-sm btn-outline-success" href={`/preview_recipe/${post.id}`}>
 									🔍 Preview
 								</a>
+								{#if isReport}
+									<a class="btn btn-sm btn-outline-danger" href={`/report_recipe/${post.id}`}>
+										Report</a
+									>
+								{/if}
 								{#if isMyRecipe}
 									<a class="btn btn-sm btn-outline-secondary" href={`/edit-Recipe/${post.id}`}>
 										Edit</a
 									>
-									<button class="btn btn-sm btn-outline-danger" on:click={() => confirmDelete(post.id)}>
+									<button
+										class="btn btn-sm btn-outline-danger"
+										on:click={() => confirmDelete(post.id)}
+									>
 										Delete</button
 									>
 								{/if}
