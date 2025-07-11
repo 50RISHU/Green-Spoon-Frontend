@@ -34,7 +34,7 @@
 				// console.log(response.data);
 				success = 'Registration successful!';
 				error = '';
-				toast.push(response.data.message)
+				toast.push("Sign Up successfully. Confirm your email to activate your account.");
 
 				goto('/login');
 			} catch (err) {
