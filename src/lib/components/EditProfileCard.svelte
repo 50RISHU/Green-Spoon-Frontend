@@ -27,12 +27,14 @@
 		if (password) {
 			formData.append('new_password', password);
 		}
-		if (profile_pic && profile_pic.type.startsWith("image/")) {
-			formData.append('profile_pic', profile_pic);
-		} else {
-			error = 'Invalid profile picture format. Please upload an image file.';
-			profile_pic = null;
-			return;
+		if (profile_pic) {
+			if(profile_pic.type.startsWith("image/")) {
+				formData.append('profile_pic', profile_pic);
+			} else {
+				error = 'Invalid profile picture format. Please upload an image file.';
+				profile_pic = null;
+				return;
+			}
 		}
 
 		try {
