@@ -1,82 +1,81 @@
 <script>
-	import { onMount } from 'svelte';
-	import { accessToken } from '$lib/stores/store';
-	import { goto } from '$app/navigation';
-	import { get } from 'svelte/store';
-	import { page } from '$app/stores';
-	import api from '$lib/api';
-	import logo from '$lib/img/green_spoon.webp';
-	import { toast } from '@zerodevx/svelte-toast';
+  import { onMount } from 'svelte';
+  import { accessToken, clearToken } from '$lib/stores/store';
+  import { goto } from '$app/navigation';
+  import { get } from 'svelte/store';
+  import { page } from '$app/stores';
+  import api from '$lib/api';
+  import logo from '$lib/img/green_spoon.webp';
 
-	let isLoggedIn = false;
-	let isTokenChecked = false;
-	let isAdmin = false;
-	let profile = '';
+  let isLoggedIn = false;
+  let isTokenChecked = false;
+  let isAdmin = false;
+  let profile = '';
 
-	accessToken.subscribe((token) => {
-		if (isTokenChecked) {
-			if (!token) {
-				isLoggedIn = false;
-				profile = '';
-			} else {
-				validateToken(token);
-			}
-		}
-	});
+  // ✅ Validate token via backend
+  async function validateToken(token) {
+    try {
+      const res = await api.get('/validate_token', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-	async function validateToken(token) {
-		try {
-			const res = await api.get('/validate_token', {
-				headers: {
-					Authorization: `Bearer ${token}`
-				}
-			});
-			isLoggedIn = res.data.valid === true;
-			isAdmin = res.data.user.is_admin === true;
-			if (isLoggedIn) {
-				profile = res.data.user.profile
-					? res.data.user.profile
-					: `https://api.dicebear.com/7.x/initials/svg?seed=${res.data.user.name || res.data.user.email}`;
-			}
-		} catch (e) {
-			console.error('Token validation error:', e);
-			// handleInvalidToken();
-			if (e.response && (e.response.status === 401 || e.response.status === 403)) {
-				handleInvalidToken();
-			} else {
-				isLoggedIn = true;
-			}
-		}
-	}
+      if (res.data.valid) {
+        const user = res.data.user;
+        isLoggedIn = true;
+        isAdmin = user.is_admin;
+        profile =
+          user.profile ||
+          `https://api.dicebear.com/7.x/initials/svg?seed=${user.name || user.email}`;
+      } else {
+        handleInvalidToken();
+      }
+    } catch (e) {
+      console.error('Token validation error:', e);
+      handleInvalidToken();
+    } finally {
+      isTokenChecked = true;
+    }
+  }
 
-	onMount(async () => {
-		const token = accessToken;
+  // ❌ Clear token and redirect to landing page
+  function handleInvalidToken() {
+    clearToken();
+    isLoggedIn = false;
+    isAdmin = false;
+    profile = '';
+    isTokenChecked = true;
 
-		if (!token) {
-			isLoggedIn = false;
-			isTokenChecked = true;
-			isAdmin = false;
-			return;
-		}
+    // Redirect only if not already on the landing page
+    const currentPath = $page.url.pathname;
+    if (currentPath !== '/') {
+      goto('/');
+    }
+  }
 
-		await validateToken(token);
-		isTokenChecked = true;
-	});
+  // 🔁 Check token on page mount
+  onMount(async () => {
+    const token = get(accessToken);
 
-	function handleInvalidToken() {
-		accessToken.set('');
-		if (typeof localStorage !== 'undefined') {
-			localStorage.removeItem('access_token');
-		}
-		isLoggedIn = false;
-		profile = '';
-		isTokenChecked = true;
-		isAdmin = false;
-		if (!$page.url.pathname.startsWith('/reset-password')) {
-			goto('/');
-		}
-	}
+    if (!token) {
+      handleInvalidToken(); // Redirect immediately
+      return;
+    }
+
+    await validateToken(token);
+  });
+
+  // 🔄 React to token changes (e.g., after logout)
+  accessToken.subscribe(async (token) => {
+    if (isTokenChecked) {
+      if (token) {
+        await validateToken(token);
+      } else {
+        handleInvalidToken();
+      }
+    }
+  });
 </script>
+
 
 {#if isTokenChecked}
 	<nav
