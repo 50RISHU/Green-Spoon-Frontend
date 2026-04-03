@@ -101,79 +101,6 @@ src/
 └── static/                    # Static files
 ```
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v16 or higher)
-- npm, pnpm, or yarn package manager
-
-### Installation
-
-1. **Clone the repository** (if not already done)
-   ```bash
-   cd frontend2
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   pnpm install
-   # or
-   yarn install
-   ```
-
-3. **Install devDependencies** (if needed)
-   ```bash
-   npm install --save-dev
-   ```
-
-## 💻 Development
-
-### Start Development Server
-```bash
-npm run dev
-```
-The application will be available at `http://localhost:5173`
-
-### Open in Browser
-```bash
-npm run dev -- --open
-```
-This automatically opens the app in your default browser.
-
-## 🏗 Building & Deployment
-
-### Build for Production
-```bash
-npm run build
-```
-This creates an optimized production build in the `.svelte-kit/output` directory.
-
-### Preview Production Build
-```bash
-npm run preview
-```
-This allows you to test the production build locally before deployment.
-
-### Deployment
-The project is configured with adapters for different platforms:
-- **Vercel Adapter**: Use `@sveltejs/adapter-vercel` for Vercel deployment
-- **Node Adapter**: Use `@sveltejs/adapter-node` for custom Node.js servers
-
-To deploy, ensure the appropriate adapter is selected in `svelte.config.js` and follow the platform-specific deployment instructions.
-
-## 📦 Available Scripts
-
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Create production build |
-| `npm run preview` | Preview production build |
-| `npm run format` | Format code with Prettier |
-| `npm run lint` | Check code with Prettier and ESLint |
-| `npm run prepare` | Sync SvelteKit types |
-
 ## 🔗 API Integration
 
 The frontend communicates with a backend API through the API client located in [lib/api.js](src/lib/api.js). 
@@ -183,13 +110,6 @@ Key features:
 - Authentication token management
 - Error handling and response formatting
 - CORS-enabled communication
-
-### API Endpoints Used
-- User Authentication: `/auth/login`, `/auth/signup`, `/auth/reset-password`
-- Recipes: `/recipes`, `/recipes/:id`, `/recipes/create`, `/recipes/edit/:id`
-- User Profile: `/users/profile`, `/users/edit`
-- Admin Operations: `/admin/users`, `/admin/recipes`, `/admin/contacts`, `/admin/reports`
-- AI Recommendations: Integration with LangChain Google GenAI API
 
 ## 🎨 Key Components
 
@@ -230,14 +150,6 @@ Built with Bootstrap 5 grid system and custom responsive styles.
 - Password reset functionality with validation
 - Protected admin routes and operations
 - Input validation on forms
-
-## 📝 Notes for Developers
-
-- All components are located in `src/lib/components/`
-- State management is handled through Svelte stores in `src/lib/stores/`
-- Utility functions are available in `src/lib/utils/`
-- API calls are centralized in `src/lib/api.js`
-- Routes follow SvelteKit conventions with `+page.svelte` and `+layout.svelte`
 
 
 ## 📚 Resources
