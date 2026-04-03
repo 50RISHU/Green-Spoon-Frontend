@@ -1,38 +1,251 @@
-# sv
+# 🌱 Eat Green, Live Clean - Vegetarian Recipe Platform
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A modern, community-driven vegetarian recipe sharing platform powered by AI recommendations. Built with Svelte Kit and hosted on a robust backend infrastructure.
 
-## Creating a project
+## 📋 Table of Contents
 
-If you're seeing this, you've probably already done this step. Congrats!
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Development](#development)
+- [Building & Deployment](#building--deployment)
+- [Available Scripts](#available-scripts)
+- [API Integration](#api-integration)
+- [Contributing](#contributing)
+- [License](#license)
 
-```bash
-# create a new project in the current directory
-npx sv create
+## ✨ Features
 
-# create a new project in my-app
-npx sv create my-app
+### User Features
+- **User Authentication**: Secure login, signup, and password reset functionality
+- **Profile Management**: Create and edit personalized user profiles
+- **Recipe Discovery**: Browse and search vegetarian recipes from the community
+- **Recipe Management**: Add, edit, and manage your own recipes
+- **Recipe Sharing**: Save favorite recipes and sharing capabilities
+- **AI Recommendations**: Get personalized recipe suggestions powered by LangChain
+- **Recipe Reporting**: Report inappropriate or low-quality recipes
+
+### Admin Features
+- **Admin Dashboard**: Comprehensive admin panel for platform management
+- **User Management**: Manage user accounts and permissions
+- **Recipe Moderation**: Review and manage submitted recipes
+- **Contact Management**: Handle user inquiries and feedback
+- **Report Management**: Review and act on recipe reports
+
+### User Engagement
+- **Contact Form**: Send feedback and inquiries to the platform team
+- **About Us**: Learn more about the platform and its mission
+- **Community Recipes**: Discover suggested and trending recipes
+
+## 🛠 Tech Stack
+
+### Frontend
+- **Svelte 5**: Modern reactive framework for building user interfaces
+- **SvelteKit**: Full-stack framework for routing and server-side rendering
+- **Vite**: Lightning-fast build tool and development server
+- **Bootstrap 5**: Responsive CSS framework
+- **Animate.css**: Animation library for smooth UI transitions
+
+### Libraries & Tools
+- **Axios**: HTTP client for API communication
+- **LangChain (Google GenAI)**: AI-powered recipe recommendations
+- **html2pdf.js**: PDF generation for recipes
+- **Marked**: Markdown parser for recipe formatting
+- **Svelte Toast**: Toast notifications for user feedback
+- **Prettier**: Code formatter
+- **ESLint**: Code linter and quality tool
+
+## 📁 Project Structure
+
+```
+src/
+├── lib/
+│   ├── api.js                 # API client and endpoints
+│   ├── components/            # Reusable Svelte components
+│   │   ├── LoginCard.svelte
+│   │   ├── SignupCard.svelte
+│   │   ├── RecipeCard.svelte
+│   │   ├── AdminPanel.svelte
+│   │   ├── NavBar.svelte
+│   │   └── ...
+│   ├── stores/                # Svelte stores for state management
+│   │   └── store.js
+│   ├── utils/                 # Utility functions
+│   │   └── validateAuth.js
+│   └── img/                   # Static images and assets
+├── routes/                    # SvelteKit pages and routes
+│   ├── +layout.svelte         # Main layout
+│   ├── +page.svelte           # Landing page
+│   ├── login/                 # Authentication pages
+│   ├── signup/
+│   ├── forgot-password/
+│   ├── reset-password/
+│   ├── dashboard/             # User dashboard
+│   ├── profile/               # User profile management
+│   ├── recipes/               # Recipe discovery
+│   ├── add-recipe/            # Recipe creation
+│   ├── my-recipes/            # User's recipes
+│   ├── edit-Recipe/           # Recipe editing
+│   ├── preview_recipe/        # Recipe preview
+│   ├── saved/                 # Saved recipes
+│   ├── admin/                 # Admin routes
+│   │   ├── manage_users/
+│   │   ├── manage_recipes/
+│   │   ├── manage_contacts/
+│   │   └── manage_reports/
+│   ├── admin_dashboard/       # Admin dashboard
+│   ├── contactUs/             # Contact form
+│   └── aboutUs/               # About page
+├── app.html                   # HTML entry point
+└── static/                    # Static files
 ```
 
-## Developing
+## 🚀 Getting Started
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Prerequisites
+- Node.js (v16 or higher)
+- npm, pnpm, or yarn package manager
 
+### Installation
+
+1. **Clone the repository** (if not already done)
+   ```bash
+   cd frontend2
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   pnpm install
+   # or
+   yarn install
+   ```
+
+3. **Install devDependencies** (if needed)
+   ```bash
+   npm install --save-dev
+   ```
+
+## 💻 Development
+
+### Start Development Server
 ```bash
 npm run dev
+```
+The application will be available at `http://localhost:5173`
 
-# or start the server and open the app in a new browser tab
+### Open in Browser
+```bash
 npm run dev -- --open
 ```
+This automatically opens the app in your default browser.
 
-## Building
+## 🏗 Building & Deployment
 
-To create a production version of your app:
-
+### Build for Production
 ```bash
 npm run build
 ```
+This creates an optimized production build in the `.svelte-kit/output` directory.
 
-You can preview the production build with `npm run preview`.
+### Preview Production Build
+```bash
+npm run preview
+```
+This allows you to test the production build locally before deployment.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+### Deployment
+The project is configured with adapters for different platforms:
+- **Vercel Adapter**: Use `@sveltejs/adapter-vercel` for Vercel deployment
+- **Node Adapter**: Use `@sveltejs/adapter-node` for custom Node.js servers
+
+To deploy, ensure the appropriate adapter is selected in `svelte.config.js` and follow the platform-specific deployment instructions.
+
+## 📦 Available Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Create production build |
+| `npm run preview` | Preview production build |
+| `npm run format` | Format code with Prettier |
+| `npm run lint` | Check code with Prettier and ESLint |
+| `npm run prepare` | Sync SvelteKit types |
+
+## 🔗 API Integration
+
+The frontend communicates with a backend API through the API client located in [lib/api.js](src/lib/api.js). 
+
+Key features:
+- Centralized HTTP requests using Axios
+- Authentication token management
+- Error handling and response formatting
+- CORS-enabled communication
+
+### API Endpoints Used
+- User Authentication: `/auth/login`, `/auth/signup`, `/auth/reset-password`
+- Recipes: `/recipes`, `/recipes/:id`, `/recipes/create`, `/recipes/edit/:id`
+- User Profile: `/users/profile`, `/users/edit`
+- Admin Operations: `/admin/users`, `/admin/recipes`, `/admin/contacts`, `/admin/reports`
+- AI Recommendations: Integration with LangChain Google GenAI API
+
+## 🎨 Key Components
+
+- **Navbar**: Main navigation component
+- **RecipeCard**: Displays recipe information in card format
+- **LoginCard / SignupCard**: Authentication forms
+- **AdminPanel**: Admin interface for platform management
+- **EditProfileCard**: User profile editing
+- **AddRecipeForm**: Form for creating new recipes
+- **DashboardCard**: Dashboard widgets
+- **SuggestedRecipes**: AI-powered recipe recommendations
+
+## 🧪 Code Quality
+
+The project follows best practices with:
+- **ESLint**: Enforces consistent code style
+- **Prettier**: Automatic code formatting
+- **SvelteKit Kit Sync**: Automatic type generation
+
+Run linting and formatting:
+```bash
+npm run lint      # Check code
+npm run format    # Auto-format code
+```
+
+## 📱 Responsive Design
+
+The platform is fully responsive and works seamlessly across:
+- Desktop browsers
+- Tablets
+- Mobile devices
+
+Built with Bootstrap 5 grid system and custom responsive styles.
+
+## 🔐 Security
+
+- Secure authentication and token management
+- Password reset functionality with validation
+- Protected admin routes and operations
+- Input validation on forms
+
+## 📝 Notes for Developers
+
+- All components are located in `src/lib/components/`
+- State management is handled through Svelte stores in `src/lib/stores/`
+- Utility functions are available in `src/lib/utils/`
+- API calls are centralized in `src/lib/api.js`
+- Routes follow SvelteKit conventions with `+page.svelte` and `+layout.svelte`
+
+
+## 📚 Resources
+
+- [Svelte Documentation](https://svelte.dev)
+- [SvelteKit Documentation](https://kit.svelte.dev)
+- [Bootstrap Documentation](https://getbootstrap.com)
+- [Axios Documentation](https://axios-http.com)
+- [LangChain Documentation](https://js.langchain.com)
+
+
