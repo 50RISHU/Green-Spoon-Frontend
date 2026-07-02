@@ -1,12 +1,15 @@
 <script>
+  // Import required stores and utilities for navigation and API calls
   import { accessToken } from "$lib/stores/store";
   import { goto } from "$app/navigation";
   import api from "$lib/api";
   import { onMount } from "svelte";
 
+  // State variables for user data
   let user = null;
   let profile = '';
 
+  // Lifecycle hook to fetch user profile data on mount
 	onMount(async () => {
 		try {
 			const res = await api.get('/profile');
@@ -24,6 +27,9 @@
 		}
 	});
 
+  /**
+   * Logs the user out by clearing the access token and redirecting to the login page.
+   */
   function handleLogout() {
     accessToken.set(null);
     goto("/login");

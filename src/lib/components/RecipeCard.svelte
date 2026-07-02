@@ -1,23 +1,30 @@
 <script>
+	// Import necessary Svelte hooks and navigation functions
 	import { goto } from '$app/navigation';
 	import api from '$lib/api';
 	import { toast } from '@zerodevx/svelte-toast';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 
-	export let fetchUrl = '/get_all_recipe';
-	export let showSave = true;
-	export let unSave = false;
-	export let isMyRecipe = false;
-	export let isReport = false;
-	export let searchRecipe = false;
-	let selectedPost = null;
-	let showCommentsModal = false;
-	let newCommentText = '';
-	let Loading = false;
-	let recipes = [];
-	let query = '';
+	// Component Props to control the behavior and display of the RecipeCard
+	export let fetchUrl = '/get_all_recipe'; // API endpoint to fetch recipes
+	export let showSave = true;              // Show save button
+	export let unSave = false;               // Show unsave button
+	export let isMyRecipe = false;           // Display edit/delete controls for author
+	export let isReport = false;             // Show report button
+	export let searchRecipe = false;         // Display a search bar
 
+	// Local State variables
+	let selectedPost = null;                 // The currently selected recipe for commenting
+	let showCommentsModal = false;           // Toggles the visibility of the comments modal
+	let newCommentText = '';                 // Bind to the comment input field
+	let Loading = false;                     // Loading indicator for async operations
+	let recipes = [];                        // Array to hold recipe data
+	let query = '';                          // Search query string
+
+	/**
+	 * Saves a recipe for the current user
+	 */
 	async function toggleSave(post) {
 		try {
 			const res = await api.post('/save_recipe', { recipe_id: post.id });
@@ -29,6 +36,9 @@
 		}
 	}
 
+	/**
+	 * Removes a saved recipe for the current user and refreshes the view
+	 */
 	async function toggleUnsave(post) {
 		try {
 			const res = await api.post('/unsave_recipe', { recipe_id: post.id });
@@ -41,17 +51,26 @@
 		}
 	}
 
+	/**
+	 * Opens the comments modal for a specific recipe
+	 */
 	function openComments(post) {
 		selectedPost = post;
 		showCommentsModal = true;
 	}
 
+	/**
+	 * Closes the comments modal and resets the input state
+	 */
 	function closeCommentsModal() {
 		showCommentsModal = false;
 		selectedPost = null;
 		newCommentText = '';
 	}
 
+	/**
+	 * Submits a new comment to the backend and updates the UI optimistically
+	 */
 	async function addComment() {
 		if (!newCommentText.trim() || !selectedPost) return;
 
@@ -62,11 +81,14 @@
 			});
 
 			if (!selectedPost.comment) selectedPost.comment = [];
+			
+			// Optimistically push the comment into the local state
 			selectedPost.comment.push({
 				User: { name: 'You' },
 				comment: newCommentText.trim()
 			});
 
+			// Trigger Svelte reactivity by assigning to self
 			recipes = [...recipes];
 			newCommentText = '';
 			console.log('Comment added:', res.data);
@@ -76,6 +98,9 @@
 		}
 	}
 
+	/**
+	 * Prompts user for confirmation before deleting their recipe
+	 */
 	async function confirmDelete(recipeId) {
 		const confirmed = confirm('🗑️ Are you sure you want to delete this recipe?');
 		if (confirmed) {
@@ -83,6 +108,9 @@
 		}
 	}
 
+	/**
+	 * Calls the backend to delete a recipe and redirects to the dashboard
+	 */
 	async function deleteRecipe(id) {
 		try {
 			const res = await api.post('/delete_recipe', { recipe_id: id });
@@ -94,6 +122,9 @@
 		}
 	}
 
+	/**
+	 * Searches recipes based on the search input query
+	 */
 	async function searchRecipes() {
 		Loading = true;
 		try {
@@ -106,8 +137,8 @@
 			Loading = false;
 		}
 	}
-
-	onMount(async () => {
+	onMount( async () => {
+	// Lifecycle hook: fetch initial recipes on component mount
 		try {
 			Loading = true;
 			const res = await api.get(fetchUrl);

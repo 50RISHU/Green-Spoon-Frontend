@@ -1,13 +1,16 @@
 <script>
+	// Import AI models and utilities for Markdown parsing
 	import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 	import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 	import { marked } from 'marked';
 	import Logo from '$lib/img/green_spoon.webp';
 	
-
+	// Form inputs for recipe suggestion
 	let ingredients = '';
 	let additional = '';
 	let time = '';
+	
+	// State for AI response Modal and parsed HTML
 	let showModal = false;
 	let recipeTitle = '';
 	let recipeSteps = '';
@@ -22,6 +25,10 @@
 		temperature: 0
 	});
 
+	/**
+	 * Submits user inputs to the Gemini AI API, receives markdown-formatted steps,
+	 * converts them to HTML, and displays them in a modal.
+	 */
 	async function handleSubmit() {
 		const messages = [
 			new SystemMessage(

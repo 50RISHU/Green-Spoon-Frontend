@@ -1,18 +1,18 @@
 <script>
+	// Import necessary Svelte hooks, routing, and API tools
 	import { goto } from "$app/navigation";
 	import api from "$lib/api";
-	import { redirect } from "@sveltejs/kit";
 	import { toast } from "@zerodevx/svelte-toast";
 	import { onMount } from "svelte";
 
-  // export let onSubmit = () => {};
-
+  // Form state variables
   let name = "";
   let email = "";
   let phone = "";
   let message = "";
-  let submitted = false;
+  let submitted = false; // Tracks if the form is currently submitting
 
+  // Lifecycle hook: auto-fill the contact form if the user is logged in
   onMount(async () => {
     try{
       const res = await api.get("/profile");
@@ -24,6 +24,9 @@
     }
   })
 
+  /**
+   * Handles contact form submission, sends message to backend, and redirects.
+   */
   async function handleSubmit(event) {
     event.preventDefault();
     submitted = true;

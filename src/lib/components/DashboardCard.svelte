@@ -1,8 +1,9 @@
 <script>
-  export let icon = "📦";
-  export let title = "Card Title";
-  export let description = "Card description goes here.";
-  export let actions = []; 
+  // DashboardCard props for customizable display
+  export let icon = "📦";                               // Emoji or icon for the card
+  export let title = "Card Title";                      // Primary title text
+  export let description = "Card description goes here."; // Secondary description text
+  export let actions = [];                              // Array of action buttons with {href, text, variant, outline}
 </script>
 
 <div class="glass p-4 h-100 shadow animate__animated animate__fadeInUp">

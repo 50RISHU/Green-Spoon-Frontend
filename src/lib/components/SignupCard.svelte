@@ -1,17 +1,25 @@
 <script>
+	// Import necessary routing, API, and toast notification utilities
 	import { goto } from '$app/navigation';
 	import api from '$lib/api';
 	import { toast } from '@zerodevx/svelte-toast';
 
+	// Component state variables for signup form fields
 	let name = '';
 	let username = '';
 	let email = '';
 	let password = '';
 
+	// State variables for UI feedback
 	let error = '';
 	let success = '';
 	let loading = false;
 
+	/**
+	 * Handles the submission of the signup form.
+	 * Performs basic client-side validation, submits to the API,
+	 * and redirects to the login page upon success.
+	 */
 	async function handleSubmit(event) {
 		event.preventDefault();
 

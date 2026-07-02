@@ -1,23 +1,27 @@
 <script>
+	// Import necessary Svelte hooks, stores, and API tools
 	import { accessToken } from '$lib/stores/store';
 	import { goto } from '$app/navigation';
 	import api from '$lib/api';
 	import { onMount } from 'svelte';
 	import { toast } from '@zerodevx/svelte-toast';
 
+	// State variables for form inputs
 	let name = '';
 	let username = '';
 	let password = '';
 	let profile_pic = '';
 
+	// State variables for user profile data and UI feedback
 	let user = null;
 	let profile = '';
-
 	let error = '';
 	let message = '';
-
 	let Loading = false;
 
+	/**
+	 * Handles profile updates, appending form data and managing the API call
+	 */
 	async function handleUpdate(event) {
 		event.preventDefault();
 
@@ -57,6 +61,7 @@
 		}
 	}
 
+	// Fetch current user profile details when the component mounts
 	onMount(async () => {
 		try {
 			const res = await api.get('/profile');

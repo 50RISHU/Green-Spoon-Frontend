@@ -1,7 +1,8 @@
 <script>
-    export let title;
-    export let subtitle = "";
-    export let content = "";
+    // Component props for rendering a generic about us content card
+    export let title;         // Main title of the card
+    export let subtitle = ""; // Optional subtitle
+    export let content = "";  // Optional text content for the card body
 </script>
 
 <div class="card animate__animated animate__fadeInUp">

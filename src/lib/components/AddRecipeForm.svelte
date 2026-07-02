@@ -1,17 +1,26 @@
 <script>
+	// Import required utilities for routing, API calls, and notifications
 	import { goto } from '$app/navigation';
 	import api from '$lib/api';
 	import { toast } from '@zerodevx/svelte-toast';
 
+	// Form fields state
 	let title = '';
 	let ingredients = '';
 	let instructions = '';
-	let imageFile = null;
+	let imageFile = null; // Holds the selected image file for upload
 	let description = '';
+	
+	// UI state for loading and alerts
 	let Loading = false;
 	let error = '';
 	let success = '';
 
+	/**
+	 * Handles the submission of a new recipe.
+	 * Validates required fields, packages data into a FormData object
+	 * for multipart/form-data upload, and redirects on success.
+	 */
 	async function handleSubmit() {
 		if (!title || !ingredients || !instructions || !description) {
 			error = '⚠️ Please fill in all required fields.';

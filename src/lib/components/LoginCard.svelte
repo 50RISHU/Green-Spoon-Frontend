@@ -1,16 +1,24 @@
 <script>
+	// Import necessary routing, API, and state management utilities
 	import { goto } from '$app/navigation';
 	import api from '$lib/api';
 	import { accessToken } from '$lib/stores/store';
 	import { toast } from '@zerodevx/svelte-toast';
 
+	// Component state variables for login form
 	let loading = false;
 	let email = '';
 	let password = '';
 
+	// State variables for displaying alerts
 	let error = '';
 	let success = '';
 
+	/**
+	 * Handles the submission of the login form.
+	 * Authenticates the user with the backend, stores the token, 
+	 * and redirects to the appropriate dashboard based on user role.
+	 */
 	async function handleSubmit(event) {
 		event.preventDefault();
 

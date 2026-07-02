@@ -1,4 +1,5 @@
 <script>
+  // Import routing utilities for navigating between admin sections
   import { goto } from "$app/navigation";
 </script>
 
